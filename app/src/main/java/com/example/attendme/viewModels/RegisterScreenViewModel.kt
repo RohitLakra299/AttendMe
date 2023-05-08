@@ -23,7 +23,8 @@ class RegisterScreenViewModel@Inject constructor() : ViewModel(){
     fun register(){
         if(name.value.isNotEmpty() && email.value.isNotEmpty() && password.value.length >= 6 && rePassword.value == password.value){
             auth.createUserWithEmailAndPassword(email.value,password.value).addOnSuccessListener {
-                val user = ProfessorModel(name.value,email.value, department.value)
+                val user = ProfessorModel(auth.uid!!,name.value,email.value, department.value)
+
                 db.add(user).addOnSuccessListener {
                     status.value = true
                 }
