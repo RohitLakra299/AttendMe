@@ -2,11 +2,11 @@ package com.example.attendme.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.attendme.screens.ClassAddScreen
 import com.example.attendme.screens.HomeScreen
 import com.example.attendme.screens.LoginScreen
 import com.example.attendme.screens.RegisterScreen
@@ -27,6 +27,9 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.HomeScreen.route){
             HomeScreen(navHostController)
+        }
+        composable(route = Screen.ClassAddScreen.route){
+            ClassAddScreen(navHostController)
         }
     }
 }
