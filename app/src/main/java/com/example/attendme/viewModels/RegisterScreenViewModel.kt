@@ -20,16 +20,16 @@ class RegisterScreenViewModel@Inject constructor() : ViewModel(){
     val status = mutableStateOf(false)
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore.collection("Professor")
-    fun register(){
+    fun register(onSuccess: () -> Unit, onFailure: (String?) -> Unit) {
         if(name.value.isNotEmpty() && email.value.isNotEmpty() && password.value.length >= 6 && rePassword.value == password.value){
             auth.createUserWithEmailAndPassword(email.value,password.value).addOnSuccessListener {
                 val user = ProfessorModel(auth.uid!!,name.value,email.value, department.value)
 
                 db.add(user).addOnSuccessListener {
-                    status.value = true
+                    onSuccess()
                 }
             }.addOnFailureListener {
-                status.value = false
+                onFailure(it.message)
             }
         }
 

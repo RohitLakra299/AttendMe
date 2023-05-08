@@ -1,6 +1,6 @@
 package com.example.attendme.screens
 
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -31,13 +32,7 @@ fun RegisterScreen(navHostController: NavHostController) {
     var passwordVisible1 by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("Select department") }
-    LaunchedEffect(key1 = viewModel.status.value) {
-        navHostController.navigate(Screen.HomeScreen.route) {
-            popUpTo(Screen.RegisterScreen.route) {
-                inclusive = true
-            }
-        }
-    }
+    val context = LocalContext.current
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
@@ -160,7 +155,21 @@ fun RegisterScreen(navHostController: NavHostController) {
                     .padding(5.dp)
                     .weight(1f, false),
                 onClick = {
-                    viewModel.register()
+                    viewModel.register(
+                        onSuccess = {
+                            navHostController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(
+                                    Screen.LoginScreen.route,
+                                ) { inclusive = true }
+                            }
+                        },
+                    ) {
+                        Toast.makeText(
+                            context,
+                            "Some error: $it",
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(Color.Gray)
             ) {
