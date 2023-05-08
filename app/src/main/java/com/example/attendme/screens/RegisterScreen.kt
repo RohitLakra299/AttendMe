@@ -1,5 +1,6 @@
 package com.example.attendme.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
@@ -17,22 +18,35 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.attendme.R
+import com.example.attendme.model.Department
 import com.example.attendme.navigation.Screen
 import com.example.attendme.viewModels.RegisterScreenViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navHostController: NavHostController){
-    val viewModel : RegisterScreenViewModel = viewModel()
+fun RegisterScreen(navHostController: NavHostController) {
+    val viewModel: RegisterScreenViewModel = viewModel()
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordVisible1 by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionText by remember { mutableStateOf("Select department") }
+    LaunchedEffect(key1 = viewModel.status.value) {
+        navHostController.navigate(Screen.HomeScreen.route) {
+            popUpTo(Screen.RegisterScreen.route) {
+                inclusive = true
+            }
+        }
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
-        Column(modifier = Modifier.fillMaxSize(),
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-        ){
+        ) {
             OutlinedTextField(
                 value = viewModel.name.value,
                 label = { Text(text = "Name") },
@@ -50,8 +64,44 @@ fun RegisterScreen(navHostController: NavHostController){
                 modifier = Modifier.padding(bottom = 10.dp)
             )
 
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {
+                    expanded = !expanded
+                }
+            ) {
+                OutlinedTextField(
+                    readOnly = true,
+                    value = selectedOptionText,
+                    onValueChange = { },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    Department.values().forEach { selectionOption ->
+                        DropdownMenuItem(
+                            onClick = {
+                                viewModel.department.value = selectionOption
+                                selectedOptionText = selectionOption.name
+                                expanded = false
+                            },
+                            text = {
+                                Text(text = selectionOption.name)
+                            },
+                        )
+                    }
+                }
+            }
+
             OutlinedTextField(value = viewModel.password.value,
                 label = { Text(text = "Password") },
+                placeholder = { Text(text = "Minimum 6 chars") },
+                isError = viewModel.password.value.length < 6,
                 onValueChange = {
                     viewModel.password.value = it
                 },
@@ -74,6 +124,7 @@ fun RegisterScreen(navHostController: NavHostController){
                 onValueChange = {
                     viewModel.rePassword.value = it
                 },
+                isError = viewModel.password.value != viewModel.rePassword.value,
                 visualTransformation = if (passwordVisible1) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val image = if (passwordVisible1)
@@ -89,26 +140,35 @@ fun RegisterScreen(navHostController: NavHostController){
                     }
                 })
 
-            ClickableText(text = AnnotatedString("Login"),
-                onClick = {navHostController.navigate(Screen.LoginScreen.route)},
+            ClickableText(
+                text = AnnotatedString("Login"),
+                onClick = {
+                    navHostController.navigate(Screen.LoginScreen.route) {
+                        popUpTo(Screen.RegisterScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                },
                 style = TextStyle(
                     color = Color.Blue,
                     textDecoration = TextDecoration.Underline
                 )
             )
-            Box(modifier = Modifier.fillMaxSize()) {
-                ElevatedButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(5.dp),
-                    onClick = {viewModel.register()
-                        if(viewModel.status.value) navHostController.navigate(Screen.HomeScreen.route)},
-                    colors = ButtonDefaults.buttonColors(Color.Gray)
-                ) {
-                    Text(text = "Continue", modifier = Modifier
+
+            ElevatedButton(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .weight(1f, false),
+                onClick = {
+                    viewModel.register()
+                },
+                colors = ButtonDefaults.buttonColors(Color.Gray)
+            ) {
+                Text(
+                    text = "Continue", modifier = Modifier
                         .padding(8.dp)
-                        .width(IntrinsicSize.Max))
-                }
+                        .width(IntrinsicSize.Max)
+                )
             }
 
 

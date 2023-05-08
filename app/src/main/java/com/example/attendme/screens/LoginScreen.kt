@@ -1,5 +1,6 @@
 package com.example.attendme.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
@@ -7,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +27,7 @@ import com.example.attendme.viewModels.LoginScreenViewModel
 fun LoginScreen(navHostController: NavHostController){
     val viewModel : LoginScreenViewModel = viewModel()
     var passwordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,7 +62,11 @@ fun LoginScreen(navHostController: NavHostController){
                 })
             ClickableText(
                 text = AnnotatedString("or Register"),
-                onClick = { navHostController.navigate(Screen.RegisterScreen.route) },
+                onClick = { navHostController.navigate(Screen.RegisterScreen.route){
+                    popUpTo(route = Screen.LoginScreen.route){
+                        inclusive = true
+                    }
+                } },
                 style = TextStyle(
                     color = Color.Blue,
                     textDecoration = TextDecoration.Underline
@@ -71,8 +78,22 @@ fun LoginScreen(navHostController: NavHostController){
                         .align(Alignment.BottomEnd)
                         .padding(5.dp),
                     onClick = {
-                        viewModel.login()
-                        if(viewModel.status.value) navHostController.navigate(Screen.HomeScreen.route)
+                        viewModel.login(
+                            onSuccess = {
+                                navHostController.navigate(Screen.HomeScreen.route) {
+                                    popUpTo(
+                                        Screen.LoginScreen.route,
+                                    ) { inclusive = true }
+                                }
+                            },
+                            onFailure = {
+                                Toast.makeText(
+                                    context,
+                                    "Some error: $it",
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            },
+                        )
                     },
                     colors = ButtonDefaults.buttonColors(Color.Gray)
                 ) {

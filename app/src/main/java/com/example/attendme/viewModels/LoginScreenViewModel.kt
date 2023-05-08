@@ -16,10 +16,12 @@ class LoginScreenViewModel@Inject constructor() : ViewModel(){
     val password = mutableStateOf("")
     val status = mutableStateOf(false)
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
-    fun login() = CoroutineScope(Dispatchers.IO).launch{
+    fun login(onSuccess:() -> Unit, onFailure: (String?) -> Unit) = CoroutineScope(Dispatchers.IO).launch{
         auth.signInWithEmailAndPassword(email.value,password.value).addOnSuccessListener {
             status.value = true
+            onSuccess()
         }.addOnFailureListener {
+            onFailure(it.message)
             status.value = false
         }
     }
