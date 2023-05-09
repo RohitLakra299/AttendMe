@@ -5,5 +5,6 @@ data class ClassModel(
     val classId: String,
     val className : String,
     val batch : String,
-    val department : String
+    val department : Department,
+    val noOfStudents : Int
 )

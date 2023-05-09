@@ -41,9 +41,9 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.padding(top = 12.dp)
         ) {
-            CourseInfoRow("Course Title", "XYZ-Course", modifier = Modifier.fillMaxWidth())
-            CourseInfoRow("Batch", "2020", modifier = Modifier.fillMaxWidth())
-            CourseInfoRow("Department", "Computer Science", modifier = Modifier.fillMaxWidth())
+            CourseInfoRow("Course Title", viewModel.currClass.value.className, modifier = Modifier.fillMaxWidth())
+            CourseInfoRow("Batch", viewModel.currClass.value.batch, modifier = Modifier.fillMaxWidth())
+            CourseInfoRow("Department", viewModel.currClass.value.department.toString(), modifier = Modifier.fillMaxWidth())
             Card(elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
                 Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -51,7 +51,7 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
                         modifier = Modifier.weight(6f),
                         style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
                     )
-                    Text(text = "79", modifier = Modifier.weight(3f), style = TextStyle(fontSize = 20.sp))
+                    Text(text = viewModel.currClass.value.noOfStudents.toString(), modifier = Modifier.weight(3f), style = TextStyle(fontSize = 20.sp))
                     IconButton(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
                         Icon(
                             imageVector = Icons.Filled.KeyboardArrowRight,

@@ -29,7 +29,8 @@ class ClassAddScreenViewModel @Inject constructor() : ViewModel() {
                     classId = classId,
                     className = className.value,
                     batch = batch.value,
-                    department = department.value.toString()
+                    department = department.value,
+                    noOfStudents = 0
                 )
             db.add(professorClass).addOnSuccessListener {
                 onSuccess()

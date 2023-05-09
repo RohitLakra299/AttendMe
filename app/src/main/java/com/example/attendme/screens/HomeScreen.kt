@@ -54,13 +54,13 @@ fun HomeScreen(navHostController: NavHostController) {
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Mr. X (TODO)",
+                text = viewModel.professor.value.name,
                 style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Black),
                 textAlign = TextAlign.Center
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Professor: (TODO) Department",
+                text = viewModel.professor.value.department.toString(),
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium),
                 textAlign = TextAlign.Center
             )
