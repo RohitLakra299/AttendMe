@@ -4,4 +4,5 @@ data class ClassModel(
     val id : String,
     val className : String,
     val batch : String,
+    val department : String
 )
