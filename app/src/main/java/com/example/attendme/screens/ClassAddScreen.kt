@@ -18,14 +18,16 @@ import com.example.attendme.viewModels.ClassAddScreenViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClassAddScreen(navHostController: NavHostController) {
-    val viewModel : ClassAddScreenViewModel = viewModel()
+    val viewModel: ClassAddScreenViewModel = viewModel()
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("Select department") }
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             OutlinedTextField(
                 value = viewModel.className.value,
                 label = { Text(text = "Class Name") },
@@ -81,26 +83,30 @@ fun ClassAddScreen(navHostController: NavHostController) {
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(5.dp),
-                    onClick = {viewModel.createClass(
-                        onSuccess = {navHostController.navigate(Screen.HomeScreen.route){
-                            popUpTo(
-                                Screen.LoginScreen.route,
-                            ) { inclusive = true }
-                        }}
-                    , onFailure = {
-                            Toast.makeText(
-                                context,
-                                "Some error: $it",
-                                Toast.LENGTH_LONG,
-                            ).show()
-                        }
-                    )
-                        },
+                    onClick = {
+                        viewModel.createClass(
+                            onSuccess = {
+                                navHostController.navigate(Screen.HomeScreen.route) {
+                                    popUpTo(
+                                        Screen.LoginScreen.route,
+                                    ) { inclusive = true }
+                                }
+                            }, onFailure = {
+                                Toast.makeText(
+                                    context,
+                                    "Some error: $it",
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            }
+                        )
+                    },
                     colors = ButtonDefaults.buttonColors(Color.Gray)
                 ) {
-                    Text(text = "Continue", modifier = Modifier
-                        .padding(8.dp)
-                        .width(IntrinsicSize.Max))
+                    Text(
+                        text = "Continue", modifier = Modifier
+                            .padding(8.dp)
+                            .width(IntrinsicSize.Max)
+                    )
                 }
             }
 

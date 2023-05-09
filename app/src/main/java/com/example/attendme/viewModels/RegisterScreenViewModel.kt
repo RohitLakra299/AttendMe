@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterScreenViewModel@Inject constructor() : ViewModel(){
+class RegisterScreenViewModel @Inject constructor() : ViewModel(){
     val name = mutableStateOf("")
     val email = mutableStateOf("")
     val password = mutableStateOf("")

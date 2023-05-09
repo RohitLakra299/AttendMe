@@ -17,23 +17,29 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel@Inject constructor() : ViewModel() {
+class HomeScreenViewModel @Inject constructor() : ViewModel() {
     private val db = Firebase.firestore.collection("Classes")
     private val auth = FirebaseAuth.getInstance()
     var classesList = mutableStateOf<List<ClassModel>>(emptyList())
 
-    fun getClasses() = CoroutineScope(Dispatchers.IO).launch{
-        val personQuery = db.whereEqualTo("id",auth.uid).get().await()
-                if(personQuery.documents.isNotEmpty()){
-                    val list = mutableListOf<ClassModel>()
-                    for(doc in personQuery){
-                        var classes = ClassModel(auth.uid!!,doc.get("className").toString(),doc.get("batch").toString(),doc.get("department").toString())
-                        Log.d("@@getClasses",classes.toString())
-                        list.add(classes)
-                    }
-                    classesList.value = list
-                    Log.d("@@getClasses",classesList.toString())
-                }
+    fun getClasses() = CoroutineScope(Dispatchers.IO).launch {
+        val personQuery = db.whereEqualTo("profId", auth.uid).get().await()
+        if (personQuery.documents.isNotEmpty()) {
+            val list = mutableListOf<ClassModel>()
+            for (doc in personQuery) {
+                var classes = ClassModel(
+                    auth.uid!!,
+                    doc.get("classId").toString(),
+                    doc.get("className").toString(),
+                    doc.get("batch").toString(),
+                    doc.get("department").toString()
+                )
+                Log.d("@@getClasses", classes.toString())
+                list.add(classes)
+            }
+            classesList.value = list
+            Log.d("@@getClasses", classesList.toString())
+        }
 
     }
 }

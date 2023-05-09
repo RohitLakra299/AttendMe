@@ -1,7 +1,8 @@
 package com.example.attendme.model
 
 data class ClassModel(
-    val id : String,
+    val profId : String,
+    val classId: String,
     val className : String,
     val batch : String,
     val department : String
