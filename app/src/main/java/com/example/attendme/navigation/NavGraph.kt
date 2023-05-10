@@ -1,6 +1,7 @@
 package com.example.attendme.navigation
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,10 +12,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.attendme.screens.ClassAddScreen
 import com.example.attendme.screens.CourseViewScreen
+import com.example.attendme.screens.EnrolledStudentsScreen
 import com.example.attendme.screens.HomeScreen
 import com.example.attendme.screens.LoginScreen
 import com.example.attendme.screens.RegisterScreen
 import com.example.attendme.viewModels.CourseViewModel
+import com.example.attendme.viewModels.StudentListViewModel
 
 
 @Composable
@@ -42,7 +45,17 @@ fun SetUpNavGraph(
         })){
             val classID = it.arguments!!.getString("classID")
             val viewModel: CourseViewModel = viewModel(initializer = {CourseViewModel(classID!!)})
-            CourseViewScreen(viewModel)
+            CourseViewScreen(viewModel, navHostController)
+        }
+
+        composable(route = Screen.EnrolledStudentScreen.route, arguments = listOf(navArgument(name = "classID"){
+            type = NavType.StringType
+            nullable = false
+        })){
+            Log.d("@@NavGraph", "enrolled screen executed again")
+            val classID = it.arguments!!.getString("classID")!!
+            val viewModel: StudentListViewModel = viewModel(initializer = {StudentListViewModel(classID) })
+            EnrolledStudentsScreen(viewModel = viewModel)
         }
     }
 }

@@ -18,7 +18,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
-class CourseViewModel @Inject constructor(private val classID: String): ViewModel(){
+class CourseViewModel @Inject constructor(val classID: String): ViewModel(){
     private val db = Firebase.firestore.collection("Classes")
     private val studentDb = Firebase.firestore.collection("Students")
     private val otpDb = Firebase.firestore.collection("CurrentLiveAttendance")

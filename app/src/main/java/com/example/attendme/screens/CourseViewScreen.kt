@@ -31,12 +31,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.attendme.viewModels.CourseViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseViewScreen(viewModel: CourseViewModel) {
-//    Toast.makeText(LocalContext.current, viewModel.classID, Toast.LENGTH_LONG).show()
+fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostController) {
     val context = LocalContext.current
     Surface {
         Column(
@@ -44,6 +44,7 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
             modifier = Modifier.padding(top = 12.dp)
         ) {
             CourseInfoRow("Course Title", viewModel.currClass.value.className, modifier = Modifier.fillMaxWidth())
+            CourseInfoRow(param = "Course Code", value = viewModel.classID)
             CourseInfoRow("Batch", viewModel.currClass.value.batch, modifier = Modifier.fillMaxWidth())
             CourseInfoRow("Department", viewModel.currClass.value.department.toString(), modifier = Modifier.fillMaxWidth())
             Card(elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
@@ -54,7 +55,7 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
                         style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
                     )
                     Text(text = viewModel.currClass.value.noOfStudents.toString(), modifier = Modifier.weight(3f), style = TextStyle(fontSize = 20.sp))
-                    IconButton(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f)) {
+                    IconButton(onClick = { navHostController.navigate("enrolled_student/${viewModel.classID}") }, modifier = Modifier.weight(1f)) {
                         Icon(
                             imageVector = Icons.Filled.KeyboardArrowRight,
                             contentDescription = "to student list"
@@ -84,7 +85,7 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
 
             }
             ElevatedButton(
-
+                enabled = !viewModel.isAttendance.value,
                 onClick = {
                           if(viewModel.otpValue.value == "OTP Value"){
                                 viewModel.addOtpAndClassID()
