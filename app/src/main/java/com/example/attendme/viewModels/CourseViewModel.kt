@@ -25,6 +25,7 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
     private val auth = FirebaseAuth.getInstance()
     var currClass = mutableStateOf(ClassModel("",classID,"","",Department.NONE,0))
     val otpValue = mutableStateOf("OTP Value")
+    val isAttendance = mutableStateOf(false)
     init {
         getClassDetails()
         getCurrOtp()
@@ -61,6 +62,7 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
                 otpValue.value = (1..6).map { alphanumeric.random() }.joinToString("")
                 val otpModel = OtpModel(otpValue.value,classID)
                 otpDb.add(otpModel).await()
+                isAttendance.value = true
         }
     }
     fun getCurrOtp() = CoroutineScope(Dispatchers.IO).launch{
@@ -82,6 +84,7 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
                 if (change.type == DocumentChange.Type.REMOVED) {
                     val deletedDocument = change.document
                     otpValue.value = "OTP value"
+                    isAttendance.value = false
                     Log.d("MyViewModel", "Document ${deletedDocument.id} was deleted.")
                 }
             }
