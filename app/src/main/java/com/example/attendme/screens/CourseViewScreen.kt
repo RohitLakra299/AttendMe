@@ -87,7 +87,7 @@ fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostContr
             ElevatedButton(
                 enabled = !viewModel.isAttendance.value,
                 onClick = {
-                          if(viewModel.otpValue.value == "OTP Value"){
+                          if(viewModel.otpValue.value == "******"){
                                 viewModel.addOtpAndClassID()
                           }else{
                               Toast.makeText(

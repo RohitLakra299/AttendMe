@@ -24,7 +24,7 @@ class CourseViewModel @Inject constructor(val classID: String): ViewModel(){
     private val otpDb = Firebase.firestore.collection("CurrentLiveAttendance")
     private val auth = FirebaseAuth.getInstance()
     var currClass = mutableStateOf(ClassModel("",classID,"","",Department.NONE,0))
-    val otpValue = mutableStateOf("OTP Value")
+    val otpValue = mutableStateOf("******")
     val isAttendance = mutableStateOf(false)
     init {
         getClassDetails()
@@ -83,7 +83,7 @@ class CourseViewModel @Inject constructor(val classID: String): ViewModel(){
             snapshot?.documentChanges?.forEach { change ->
                 if (change.type == DocumentChange.Type.REMOVED) {
                     val deletedDocument = change.document
-                    otpValue.value = "OTP value"
+                    otpValue.value = "******"
                     isAttendance.value = false
                     Log.d("MyViewModel", "Document ${deletedDocument.id} was deleted.")
                 }
