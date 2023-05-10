@@ -7,6 +7,7 @@ import com.example.attendme.model.ClassModel
 import com.example.attendme.model.Department
 import com.example.attendme.model.OtpModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,7 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
     init {
         getClassDetails()
         getCurrOtp()
+        otpListener()
     }
     fun getClassDetails() = CoroutineScope(Dispatchers.IO).launch {
         val classQuery = db.whereEqualTo("classId",classID).get().await()
@@ -70,4 +72,20 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
         }
     }
 
+    private fun otpListener() = CoroutineScope(Dispatchers.IO).launch {
+        otpDb.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                // Handle any errors that occur.
+                return@addSnapshotListener
+            }
+            snapshot?.documentChanges?.forEach { change ->
+                if (change.type == DocumentChange.Type.REMOVED) {
+                    val deletedDocument = change.document
+                    otpValue.value = "OTP value"
+                    Log.d("MyViewModel", "Document ${deletedDocument.id} was deleted.")
+                }
+            }
+    }
+
+}
 }
