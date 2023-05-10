@@ -1,9 +1,11 @@
 package com.example.attendme.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.attendme.model.ClassModel
 import com.example.attendme.model.Department
+import com.example.attendme.model.OtpModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -15,11 +17,13 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
-class CourseViewModel @Inject constructor(val classID: String): ViewModel(){
+class CourseViewModel @Inject constructor(private val classID: String): ViewModel(){
     private val db = Firebase.firestore.collection("Classes")
     private val studentDb = Firebase.firestore.collection("Students")
+    private val otpDb = Firebase.firestore.collection("CurrentLiveAttendance")
     private val auth = FirebaseAuth.getInstance()
     var currClass = mutableStateOf(ClassModel("",classID,"","",Department.NONE,0))
+    val otpValue = mutableStateOf("OTP Value")
     init {
         getClassDetails()
     }
@@ -43,5 +47,21 @@ class CourseViewModel @Inject constructor(val classID: String): ViewModel(){
             }
         }
     }
+    fun addOtpAndClassID() = CoroutineScope(Dispatchers.IO).launch {
+        val otpQuery = otpDb.whereEqualTo("classId",classID).get().await()
+        var check = true
+        if(otpQuery.documents.isNotEmpty()){
+            Log.d("@@addOtpAndClassID", "Class attendance already in progress")
+
+        }else{
+                val alphanumeric = ('0'..'9')
+                otpValue.value = (1..6).map { alphanumeric.random() }.joinToString("")
+                val otpModel = OtpModel(otpValue.value,classID)
+                otpDb.add(otpModel).await()
+        }
+
+
+    }
+
 
 }

@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,7 +36,8 @@ import com.example.attendme.viewModels.CourseViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseViewScreen(viewModel: CourseViewModel) {
-    Toast.makeText(LocalContext.current, viewModel.classID, Toast.LENGTH_LONG).show()
+//    Toast.makeText(LocalContext.current, viewModel.classID, Toast.LENGTH_LONG).show()
+    val context = LocalContext.current
     Surface {
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -71,7 +73,7 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "OTP Value",
+                    text = viewModel.otpValue.value,
                     style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Black)
                 )
                 Text(
@@ -83,7 +85,17 @@ fun CourseViewScreen(viewModel: CourseViewModel) {
             }
             ElevatedButton(
 
-                onClick = { /*TODO*/ },
+                onClick = {
+                          if(viewModel.otpValue.value == "OTP Value"){
+                                viewModel.addOtpAndClassID()
+                          }else{
+                              Toast.makeText(
+                                  context,
+                                  "Some error: OTP value already generated",
+                                  Toast.LENGTH_LONG,
+                              ).show()
+                          }
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 12.dp)
