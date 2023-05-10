@@ -26,6 +26,7 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
     val otpValue = mutableStateOf("OTP Value")
     init {
         getClassDetails()
+        getCurrOtp()
     }
     fun getClassDetails() = CoroutineScope(Dispatchers.IO).launch {
         val classQuery = db.whereEqualTo("classId",classID).get().await()
@@ -59,9 +60,14 @@ class CourseViewModel @Inject constructor(private val classID: String): ViewMode
                 val otpModel = OtpModel(otpValue.value,classID)
                 otpDb.add(otpModel).await()
         }
-
-
     }
-
+    fun getCurrOtp() = CoroutineScope(Dispatchers.IO).launch{
+        val otpQuery = otpDb.whereEqualTo("classId",classID).get().await()
+        if(otpQuery.documents.isNotEmpty()){
+            for(doc in otpQuery){
+                otpValue.value = doc.get("otp").toString()
+            }
+        }
+    }
 
 }
