@@ -41,7 +41,16 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
                     department = Department.IT_DEPARTMENT
                 }else if(dep == Department.MECH_DEPARTMENT.toString()){
                     department = Department.MECH_DEPARTMENT
-                }else{
+                }else if(dep == Department.AI_DATASCIENCE_DEPARTMENT.toString()) {
+                    department = Department.AI_DATASCIENCE_DEPARTMENT
+                }else if(dep == Department.BIOENGINEERING_DEPARTMENT.toString()) {
+                    department = Department.BIOENGINEERING_DEPARTMENT
+                }else if(dep == Department.CHEMICAL_ENGINEERING.toString()) {
+                    department = Department.CHEMICAL_ENGINEERING
+                }else if(dep == Department.ELECTRICAL_DEPARTMENT.toString()) {
+                    department = Department.ELECTRICAL_DEPARTMENT
+                }else
+                {
                     department = Department.NONE
                 }
                 var classes = ClassModel(
@@ -72,7 +81,16 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
                     department = Department.IT_DEPARTMENT
                 }else if(dep == Department.MECH_DEPARTMENT.toString()){
                     department = Department.MECH_DEPARTMENT
-                }else{
+                }else if(dep == Department.AI_DATASCIENCE_DEPARTMENT.toString()) {
+                    department = Department.AI_DATASCIENCE_DEPARTMENT
+                }else if(dep == Department.BIOENGINEERING_DEPARTMENT.toString()) {
+                    department = Department.BIOENGINEERING_DEPARTMENT
+                }else if(dep == Department.CHEMICAL_ENGINEERING.toString()) {
+                    department = Department.CHEMICAL_ENGINEERING
+                }else if(dep == Department.ELECTRICAL_DEPARTMENT.toString()) {
+                    department = Department.ELECTRICAL_DEPARTMENT
+                }else
+                {
                     department = Department.NONE
                 }
                 var prof = ProfessorModel(auth.uid!!,doc.get("name").toString(),doc.get("email").toString(),department)
