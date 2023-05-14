@@ -16,6 +16,7 @@ import com.example.attendme.screens.EnrolledStudentsScreen
 import com.example.attendme.screens.HomeScreen
 import com.example.attendme.screens.LoginScreen
 import com.example.attendme.screens.RegisterScreen
+import com.example.attendme.screens.SplashScreen
 import com.example.attendme.viewModels.CourseViewModel
 import com.example.attendme.viewModels.StudentListViewModel
 
@@ -27,6 +28,9 @@ fun SetUpNavGraph(
     lifecycleOwner: LifecycleOwner
 ){
     NavHost(navController = navHostController, startDestination = Screen.LoginScreen.route ){
+        composable(route = Screen.SplashScreen.route){
+            SplashScreen(navHostController = navHostController)
+        }
         composable(route = Screen.LoginScreen.route){
             LoginScreen(navHostController)
         }
