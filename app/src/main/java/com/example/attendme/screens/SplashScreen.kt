@@ -36,7 +36,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navHostController: NavHostController) {
-    val image = painterResource(id = R.drawable.register_page)
+    val image = painterResource(id = R.drawable.register_page_removebg_preview)
     var animationStarted by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = true) {
         animationStarted = true

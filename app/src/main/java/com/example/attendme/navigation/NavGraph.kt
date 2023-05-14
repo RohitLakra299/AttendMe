@@ -27,7 +27,7 @@ fun SetUpNavGraph(
     context: Context,
     lifecycleOwner: LifecycleOwner
 ){
-    NavHost(navController = navHostController, startDestination = Screen.LoginScreen.route ){
+    NavHost(navController = navHostController, startDestination = Screen.SplashScreen.route ){
         composable(route = Screen.SplashScreen.route){
             SplashScreen(navHostController = navHostController)
         }

@@ -28,6 +28,10 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
     init {
        getProfessor()
     }
+
+    fun signOut(){
+        if(auth.currentUser != null) auth.signOut()
+    }
     fun getClasses() = CoroutineScope(Dispatchers.IO).launch {
         val personQuery = db.whereEqualTo("profId", auth.uid).get().await()
         if (personQuery.documents.isNotEmpty()) {
