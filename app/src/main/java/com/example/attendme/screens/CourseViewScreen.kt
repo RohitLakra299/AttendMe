@@ -1,5 +1,8 @@
 package com.example.attendme.screens
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,16 +29,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.attendme.viewModels.CourseViewModel
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostController) {
+fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostController, path: File) {
     val context = LocalContext.current
     Surface {
         Column(
@@ -98,12 +99,37 @@ fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostContr
                           }
                 },
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.BottomEnd)
                     .padding(bottom = 12.dp)
             ) {
                 Text(text = "Start Attendance for this class")
             }
+            ElevatedButton(
+                onClick = {
+                        viewModel.downloadCsv(
+                            onSuccess = {
+                                val file = File("$path/attendance.csv")
 
+                                // Create a new Intent to download the file
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.setDataAndType(Uri.fromFile(file), "text/csv")
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+
+                                // Start the download
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    Toast.makeText(context, "No app found to open CSV files", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        )
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 12.dp)
+            ) {
+                Text(text = "Download Attendance.csv")
+            }
         }
     }
 }

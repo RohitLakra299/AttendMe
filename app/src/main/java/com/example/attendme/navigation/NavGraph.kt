@@ -19,13 +19,15 @@ import com.example.attendme.screens.RegisterScreen
 import com.example.attendme.screens.SplashScreen
 import com.example.attendme.viewModels.CourseViewModel
 import com.example.attendme.viewModels.StudentListViewModel
+import java.io.File
 
 
 @Composable
 fun SetUpNavGraph(
     navHostController: NavHostController,
     context: Context,
-    lifecycleOwner: LifecycleOwner
+    lifecycleOwner: LifecycleOwner,
+    path: File
 ){
     NavHost(navController = navHostController, startDestination = Screen.SplashScreen.route ){
         composable(route = Screen.SplashScreen.route){
@@ -48,8 +50,8 @@ fun SetUpNavGraph(
             this.nullable = false
         })){
             val classID = it.arguments!!.getString("classID")
-            val viewModel: CourseViewModel = viewModel(initializer = {CourseViewModel(classID!!)})
-            CourseViewScreen(viewModel, navHostController)
+            val viewModel: CourseViewModel = viewModel(initializer = {CourseViewModel(classID!!,path)})
+            CourseViewScreen(viewModel, navHostController,path)
         }
 
         composable(route = Screen.EnrolledStudentScreen.route, arguments = listOf(navArgument(name = "classID"){
