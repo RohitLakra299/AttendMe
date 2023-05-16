@@ -19,7 +19,6 @@ import com.example.attendme.screens.RegisterScreen
 import com.example.attendme.screens.SplashScreen
 import com.example.attendme.viewModels.CourseViewModel
 import com.example.attendme.viewModels.StudentListViewModel
-import java.io.File
 
 
 @Composable
@@ -27,7 +26,7 @@ fun SetUpNavGraph(
     navHostController: NavHostController,
     context: Context,
     lifecycleOwner: LifecycleOwner,
-    path: File
+    path: String
 ){
     NavHost(navController = navHostController, startDestination = Screen.SplashScreen.route ){
         composable(route = Screen.SplashScreen.route){

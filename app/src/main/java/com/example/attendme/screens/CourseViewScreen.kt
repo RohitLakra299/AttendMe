@@ -37,7 +37,7 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostController, path: File) {
+fun CourseViewScreen(viewModel: CourseViewModel, navHostController: NavHostController, path: String) {
     val context = LocalContext.current
     Surface {
         Column(
