@@ -1,7 +1,9 @@
 package com.example.attendme.navigation
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,6 +23,7 @@ import com.example.attendme.viewModels.CourseViewModel
 import com.example.attendme.viewModels.StudentListViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SetUpNavGraph(
     navHostController: NavHostController,

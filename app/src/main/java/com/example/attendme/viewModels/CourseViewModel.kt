@@ -1,7 +1,9 @@
 package com.example.attendme.viewModels
 
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,6 +25,8 @@ import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +51,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
         val classQuery = db.whereEqualTo("classId", classID).get().await()
         if (classQuery.documents.isNotEmpty()) {
             for (doc in classQuery) {
-                var dep = doc.get("department").toString()
+                val dep = doc.get("department").toString()
                 var department: Department
                 if (dep == Department.CS_DEPARTMENT.toString()) {
                     department = Department.CS_DEPARTMENT
@@ -58,7 +62,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
                 } else {
                     department = Department.NONE
                 }
-                var classes = ClassModel(
+                val classes = ClassModel(
                     auth.uid!!,
                     doc.get("classId").toString(),
                     doc.get("className").toString(),
@@ -73,7 +77,6 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
 
     fun addOtpAndClassID() = CoroutineScope(Dispatchers.IO).launch {
         val otpQuery = otpDb.whereEqualTo("classId", classID).get().await()
-        var check = true
         if (otpQuery.documents.isNotEmpty()) {
             Log.d("@@addOtpAndClassID", "Class attendance already in progress")
 
@@ -112,14 +115,15 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun downloadCsv(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            var attendanceList = mutableStateOf<List<AttendanceModel>>(emptyList())
-            var totalDates = mutableListOf<String>()
+            val attendanceList = mutableStateOf<List<AttendanceModel>>(emptyList())
+            val totalDates = mutableListOf<String>()
             val studentQuery = studentDb.get().await()
             if (studentQuery.documents.isNotEmpty()) {
                 var studentClassIDList: MutableList<String>
-                var studentList = mutableListOf<StudentModel>()
+                val studentList = mutableListOf<StudentModel>()
                 var currStudent: StudentModel
                 for (studentDoc in studentQuery) {
                     studentClassIDList = studentDoc.get("classes") as MutableList<String>
@@ -135,7 +139,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
                     }
                 }
                 studentsList.value = studentList
-                var currAttendanceList = mutableListOf<AttendanceModel>()
+                val currAttendanceList = mutableListOf<AttendanceModel>()
                 for (data in studentsList.value) {
                     currAttendanceList.add(
                         AttendanceModel(
@@ -149,7 +153,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
                 attendanceList.value = currAttendanceList
             }
             Log.d("@@GetAll", attendanceList.value.toString())
-            Log.d("@@downloadCsv0", currClass.value.classId.toString())
+            Log.d("@@downloadCsv0", currClass.value.classId)
 
             val classQuery = db.whereEqualTo("classId", currClass.value.classId).get().await()
             Log.d("@@downloadCsv1", attendanceList.value.toString())
@@ -173,7 +177,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
                             )
                         }?.toMutableList()
                         for (attendance in attendanceList.value) {
-                            var dateList = mutableListOf<String>()
+                            val dateList = mutableListOf<String>()
                             dateList.addAll(attendance.date)
                             for (student in mappedStudentList!!) {
                                 if (student.id == attendance.id) {
@@ -188,7 +192,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
                 Log.d("@@downloadCsv", attendanceList.value.toString())
             }
 
-            var dataToWrite = "Id, Name, RollNo" + totalDates.joinToString()
+            var dataToWrite = "Id, Name, RollNo, " + totalDates.joinToString()
             for (item in attendanceList.value) {
                 val row = ArrayList<String>()
                 row.ensureCapacity(totalDates.size + 3)
@@ -209,6 +213,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun writeDataToCsv(data: String) {
         Log.d("@@csv", data)
         try {
@@ -218,7 +223,7 @@ class CourseViewModel @Inject constructor(val classID: String, val path: String)
                 folder.mkdirs()
             }
 
-            val filePath = "$folderPath/data.csv"
+            val filePath = "$folderPath/${currClass.value.className}-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))}.csv"
             val file = File(filePath)
 
             val fileWriter = FileWriter(file)
