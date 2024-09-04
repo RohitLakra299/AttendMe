@@ -11,7 +11,7 @@ AttendMe is an Android application designed to streamline and organize attendanc
 - **QR Code Generation**: Teachers can generate a QR code that students can scan from a website to mark their attendance.
 
 <br/>
-<a href="https://github.com/user-attachments/assets/365b6258-d04b-4e05-a317-ef025fd2d427">Video Link</a>
+<a href="https://youtu.be/HqsKadtjtLI">Youtube Video Link</a>
 <br/>
 
 ## Screenshots
